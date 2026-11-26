@@ -172,24 +172,96 @@ impl Skills {
 
     fn populate_standard_skills(&mut self) {
         let defaults = vec![
-            Skill::new("anthropics/skills", "anthropics", "Anthropic Agent Skills", SkillCategory::Productivity, "Core agent skill primitives and tools")
-                .unwrap().with_capability("prompt-eval").with_trigger("/anthropic"),
-            Skill::new("addyosmani/agent-skills", "addyosmani", "Web Performance & Code Review", SkillCategory::WebAndDesign, "Modern web architecture and performance analysis")
-                .unwrap().with_capability("web-perf").with_trigger("/web-perf"),
-            Skill::new("alibaba/open-code-review", "alibaba", "Open Code Review Assistant", SkillCategory::CodeReview, "Automated code inspection and vulnerability detection")
-                .unwrap().with_capability("code-review").with_trigger("/review"),
-            Skill::new("akkie76/code-review-skills", "akkie76", "Code Review Essentials", SkillCategory::CodeReview, "Systematic PR hygiene and review guidelines")
-                .unwrap().with_capability("code-review").with_trigger("/audit"),
-            Skill::new("aiopshwang/data-analysis-ml-agent-skills", "aiopshwang", "ML & Data Analysis Suite", SkillCategory::DataAnalysis, "Data science pipelines, model evaluation, and EDA")
-                .unwrap().with_capability("data-analysis").with_trigger("/data-analysis"),
-            Skill::new("mohitmishra786/low-level-dev-skills", "mohitmishra786", "Low-Level Systems Engineering", SkillCategory::LowLevelEngineering, "Kernel internals, memory safety, and assembly debugging")
-                .unwrap().with_capability("low-level-dev").with_trigger("/systems"),
-            Skill::new("cathrynlavery/diagram-design", "cathrynlavery", "Diagram & Architecture Visualizer", SkillCategory::Architecture, "Mermaid flowcharts, system diagrams, and UI wireframes")
-                .unwrap().with_capability("diagram-design").with_trigger("/diagram"),
-            Skill::new("EtienneLescot/n8n-as-code", "EtienneLescot", "Workflow & Automation Orchestrator", SkillCategory::DevOpsAndWorkflows, "Workflow pipelines, webhook automation, and integration DAGs")
-                .unwrap().with_capability("workflows").with_trigger("/workflow"),
-            Skill::new("docmd-io/docmd", "docmd-io", "Technical Documentation Engine", SkillCategory::Productivity, "Markdown documentation generator and spec validator")
-                .unwrap().with_capability("documentation").with_trigger("/doc"),
+            Skill::new(
+                "anthropics/skills",
+                "anthropics",
+                "Anthropic Agent Skills",
+                SkillCategory::Productivity,
+                "Core agent skill primitives and tools",
+            )
+            .unwrap()
+            .with_capability("prompt-eval")
+            .with_trigger("/anthropic"),
+            Skill::new(
+                "addyosmani/agent-skills",
+                "addyosmani",
+                "Web Performance & Code Review",
+                SkillCategory::WebAndDesign,
+                "Modern web architecture and performance analysis",
+            )
+            .unwrap()
+            .with_capability("web-perf")
+            .with_trigger("/web-perf"),
+            Skill::new(
+                "alibaba/open-code-review",
+                "alibaba",
+                "Open Code Review Assistant",
+                SkillCategory::CodeReview,
+                "Automated code inspection and vulnerability detection",
+            )
+            .unwrap()
+            .with_capability("code-review")
+            .with_trigger("/review"),
+            Skill::new(
+                "akkie76/code-review-skills",
+                "akkie76",
+                "Code Review Essentials",
+                SkillCategory::CodeReview,
+                "Systematic PR hygiene and review guidelines",
+            )
+            .unwrap()
+            .with_capability("code-review")
+            .with_trigger("/audit"),
+            Skill::new(
+                "aiopshwang/data-analysis-ml-agent-skills",
+                "aiopshwang",
+                "ML & Data Analysis Suite",
+                SkillCategory::DataAnalysis,
+                "Data science pipelines, model evaluation, and EDA",
+            )
+            .unwrap()
+            .with_capability("data-analysis")
+            .with_trigger("/data-analysis"),
+            Skill::new(
+                "mohitmishra786/low-level-dev-skills",
+                "mohitmishra786",
+                "Low-Level Systems Engineering",
+                SkillCategory::LowLevelEngineering,
+                "Kernel internals, memory safety, and assembly debugging",
+            )
+            .unwrap()
+            .with_capability("low-level-dev")
+            .with_trigger("/systems"),
+            Skill::new(
+                "cathrynlavery/diagram-design",
+                "cathrynlavery",
+                "Diagram & Architecture Visualizer",
+                SkillCategory::Architecture,
+                "Mermaid flowcharts, system diagrams, and UI wireframes",
+            )
+            .unwrap()
+            .with_capability("diagram-design")
+            .with_trigger("/diagram"),
+            Skill::new(
+                "EtienneLescot/n8n-as-code",
+                "EtienneLescot",
+                "Workflow & Automation Orchestrator",
+                SkillCategory::DevOpsAndWorkflows,
+                "Workflow pipelines, webhook automation, and integration DAGs",
+            )
+            .unwrap()
+            .with_capability("workflows")
+            .with_trigger("/workflow"),
+            Skill::new(
+                "docmd-io/docmd",
+                "docmd-io",
+                "Technical Documentation Engine",
+                SkillCategory::Productivity,
+                "Markdown documentation generator and spec validator",
+            )
+            .unwrap()
+            .with_capability("documentation")
+            .with_trigger("/doc"),
         ];
 
         for s in defaults {
@@ -233,7 +305,10 @@ impl Skills {
 
     /// Find all skills belonging to a specific category.
     pub fn get_by_category(&self, category: SkillCategory) -> Vec<&Skill> {
-        self.skills.values().filter(|s| s.category == category).collect()
+        self.skills
+            .values()
+            .filter(|s| s.category == category)
+            .collect()
     }
 
     /// Find skills that provide a specific capability tag.
@@ -308,8 +383,22 @@ mod tests {
     fn test_duplicate_skill_rejected_aaa() {
         // Arrange
         let mut m = Skills::new("TestRegistry");
-        let s1 = Skill::new("test/dup", "author", "Name", SkillCategory::CodeReview, "desc").unwrap();
-        let s2 = Skill::new("test/dup", "author", "Name 2", SkillCategory::CodeReview, "desc").unwrap();
+        let s1 = Skill::new(
+            "test/dup",
+            "author",
+            "Name",
+            SkillCategory::CodeReview,
+            "desc",
+        )
+        .unwrap();
+        let s2 = Skill::new(
+            "test/dup",
+            "author",
+            "Name 2",
+            SkillCategory::CodeReview,
+            "desc",
+        )
+        .unwrap();
         m.add_skill(s1).unwrap();
 
         // Act
@@ -326,7 +415,9 @@ mod tests {
 
         // Assert
         assert!(registry.skill_count() >= 9);
-        assert!(registry.get_skill("mohitmishra786/low-level-dev-skills").is_some());
+        assert!(registry
+            .get_skill("mohitmishra786/low-level-dev-skills")
+            .is_some());
         assert!(registry.get_skill("alibaba/open-code-review").is_some());
     }
 
@@ -341,7 +432,9 @@ mod tests {
 
         // Assert
         assert!(!code_review_skills.is_empty());
-        assert!(search_results.iter().any(|s| s.id == "mohitmishra786/low-level-dev-skills"));
+        assert!(search_results
+            .iter()
+            .any(|s| s.id == "mohitmishra786/low-level-dev-skills"));
     }
 
     #[test]

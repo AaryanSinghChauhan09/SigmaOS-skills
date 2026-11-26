@@ -7,12 +7,16 @@ fn test_skills_lifecycle_and_defaults_aaa() {
 
     // Act
     let count = registry.skill_count();
-    let low_level = registry.get_skill("mohitmishra786/low-level-dev-skills").unwrap();
+    let low_level = registry
+        .get_skill("mohitmishra786/low-level-dev-skills")
+        .unwrap();
 
     // Assert
     assert!(count >= 9);
     assert_eq!(low_level.category, SkillCategory::LowLevelEngineering);
-    assert!(low_level.capabilities.contains(&"low-level-dev".to_string()));
+    assert!(low_level
+        .capabilities
+        .contains(&"low-level-dev".to_string()));
 }
 
 #[test]
@@ -27,7 +31,10 @@ fn test_skills_capability_resolution_and_filtering_aaa() {
     // Assert
     assert_eq!(review_skills.len(), 2);
     assert_eq!(analysis_skills.len(), 1);
-    assert_eq!(analysis_skills[0].id, "aiopshwang/data-analysis-ml-agent-skills");
+    assert_eq!(
+        analysis_skills[0].id,
+        "aiopshwang/data-analysis-ml-agent-skills"
+    );
 }
 
 #[test]
