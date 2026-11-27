@@ -29,11 +29,12 @@ fn test_skills_capability_resolution_and_filtering_aaa() {
     let analysis_skills = registry.get_by_category(SkillCategory::DataAnalysis);
 
     // Assert
-    assert_eq!(review_skills.len(), 2);
-    assert_eq!(analysis_skills.len(), 1);
-    assert_eq!(
-        analysis_skills[0].id,
-        "aiopshwang/data-analysis-ml-agent-skills"
+    assert!(review_skills.len() >= 2, "expected at least 2 code-review skills, got {}", review_skills.len());
+    assert!(analysis_skills.len() >= 1, "expected at least 1 DataAnalysis skill, got {}", analysis_skills.len());
+    // Verify the canonical data-analysis skill is present
+    assert!(
+        analysis_skills.iter().any(|s| s.id == "aiopshwang/data-analysis-ml-agent-skills"),
+        "aiopshwang/data-analysis-ml-agent-skills must be in DataAnalysis category"
     );
 }
 

@@ -171,101 +171,661 @@ impl Skills {
     }
 
     fn populate_standard_skills(&mut self) {
-        let defaults = vec![
-            Skill::new(
+        const STANDARD_SKILLS: &[(&str, &str, &str, SkillCategory, &str, &str, &str)] = &[
+            (
                 "anthropics/skills",
                 "anthropics",
                 "Anthropic Agent Skills",
                 SkillCategory::Productivity,
                 "Core agent skill primitives and tools",
-            )
-            .unwrap()
-            .with_capability("prompt-eval")
-            .with_trigger("/anthropic"),
-            Skill::new(
+                "prompt-eval",
+                "/anthropic",
+            ),
+            (
                 "addyosmani/agent-skills",
                 "addyosmani",
                 "Web Performance & Code Review",
                 SkillCategory::WebAndDesign,
                 "Modern web architecture and performance analysis",
-            )
-            .unwrap()
-            .with_capability("web-perf")
-            .with_trigger("/web-perf"),
-            Skill::new(
+                "web-perf",
+                "/web-perf",
+            ),
+            (
                 "alibaba/open-code-review",
                 "alibaba",
                 "Open Code Review Assistant",
                 SkillCategory::CodeReview,
                 "Automated code inspection and vulnerability detection",
-            )
-            .unwrap()
-            .with_capability("code-review")
-            .with_trigger("/review"),
-            Skill::new(
+                "code-review",
+                "/review",
+            ),
+            (
                 "akkie76/code-review-skills",
                 "akkie76",
                 "Code Review Essentials",
                 SkillCategory::CodeReview,
                 "Systematic PR hygiene and review guidelines",
-            )
-            .unwrap()
-            .with_capability("code-review")
-            .with_trigger("/audit"),
-            Skill::new(
+                "code-review",
+                "/audit",
+            ),
+            (
                 "aiopshwang/data-analysis-ml-agent-skills",
                 "aiopshwang",
                 "ML & Data Analysis Suite",
                 SkillCategory::DataAnalysis,
                 "Data science pipelines, model evaluation, and EDA",
-            )
-            .unwrap()
-            .with_capability("data-analysis")
-            .with_trigger("/data-analysis"),
-            Skill::new(
+                "data-analysis",
+                "/data-analysis",
+            ),
+            (
                 "mohitmishra786/low-level-dev-skills",
                 "mohitmishra786",
                 "Low-Level Systems Engineering",
                 SkillCategory::LowLevelEngineering,
                 "Kernel internals, memory safety, and assembly debugging",
-            )
-            .unwrap()
-            .with_capability("low-level-dev")
-            .with_trigger("/systems"),
-            Skill::new(
+                "low-level-dev",
+                "/systems",
+            ),
+            (
                 "cathrynlavery/diagram-design",
                 "cathrynlavery",
                 "Diagram & Architecture Visualizer",
                 SkillCategory::Architecture,
                 "Mermaid flowcharts, system diagrams, and UI wireframes",
-            )
-            .unwrap()
-            .with_capability("diagram-design")
-            .with_trigger("/diagram"),
-            Skill::new(
+                "diagram-design",
+                "/diagram",
+            ),
+            (
                 "EtienneLescot/n8n-as-code",
                 "EtienneLescot",
                 "Workflow & Automation Orchestrator",
                 SkillCategory::DevOpsAndWorkflows,
                 "Workflow pipelines, webhook automation, and integration DAGs",
-            )
-            .unwrap()
-            .with_capability("workflows")
-            .with_trigger("/workflow"),
-            Skill::new(
+                "workflows",
+                "/workflow",
+            ),
+            (
                 "docmd-io/docmd",
                 "docmd-io",
                 "Technical Documentation Engine",
                 SkillCategory::Productivity,
                 "Markdown documentation generator and spec validator",
-            )
-            .unwrap()
-            .with_capability("documentation")
-            .with_trigger("/doc"),
+                "documentation",
+                "/doc",
+            ),
+            (
+                "affaan-m/ECC",
+                "affaan-m",
+                "ECC Agent Workflows",
+                SkillCategory::DevOpsAndWorkflows,
+                "Structured engineering workflow skills",
+                "workflows",
+                "/ecc",
+            ),
+            (
+                "AgainstStoneGold/rpocket-team-antigravity-skill-engine",
+                "AgainstStoneGold",
+                "RPocket Antigravity Skill Engine",
+                SkillCategory::DevOpsAndWorkflows,
+                "Team skill orchestration engine",
+                "skill-engine",
+                "/rpocket",
+            ),
+            (
+                "agentskills/agentskills",
+                "agentskills",
+                "AgentSkills Standard Catalog",
+                SkillCategory::Productivity,
+                "Open specification and catalog for agent skills",
+                "skill-spec",
+                "/agentskills",
+            ),
+            (
+                "aklofas/kicad-happy",
+                "aklofas",
+                "KiCad Happy PCB Design",
+                SkillCategory::LowLevelEngineering,
+                "Schematic and PCB layout automation skills",
+                "eda-pcb",
+                "/kicad",
+            ),
+            (
+                "Bhanunamikaze/Agentic-SEO-Skill",
+                "Bhanunamikaze",
+                "Agentic SEO Skill",
+                SkillCategory::WebAndDesign,
+                "Technical SEO auditing and structured metadata optimization",
+                "seo",
+                "/seo",
+            ),
+            (
+                "blader/humanizer",
+                "blader",
+                "Humanizer Writing Polish",
+                SkillCategory::Productivity,
+                "Natural prose editing and clarity refinement",
+                "writing",
+                "/humanize",
+            ),
+            (
+                "borghei/Claude-Skills",
+                "borghei",
+                "Claude Skills Collection",
+                SkillCategory::Productivity,
+                "Reusable developer and reasoning skill templates",
+                "prompting",
+                "/claude-skills",
+            ),
+            (
+                "buiquangvu235/antigravity-skills-engine",
+                "buiquangvu235",
+                "Antigravity Skills Engine",
+                SkillCategory::DevOpsAndWorkflows,
+                "Modular skill execution and routing framework",
+                "skill-engine",
+                "/ag-engine",
+            ),
+            (
+                "career-ops-hq/career-ops",
+                "career-ops-hq",
+                "Career Ops Assistant",
+                SkillCategory::Productivity,
+                "Resume, role matching, and technical interview preparation",
+                "career-ops",
+                "/career",
+            ),
+            (
+                "ciembor/agent-rules-books",
+                "ciembor",
+                "Agent Rules & Playbooks",
+                SkillCategory::Architecture,
+                "Engineering rulebooks and coding standards for agents",
+                "rulebooks",
+                "/rules",
+            ),
+            (
+                "ComposioHQ/awesome-claude-skills",
+                "ComposioHQ",
+                "Awesome Claude Skills",
+                SkillCategory::Productivity,
+                "Curated tool integrations and agent skill recipes",
+                "integrations",
+                "/composio",
+            ),
+            (
+                "coreyhaines31/marketingskills",
+                "coreyhaines31",
+                "Marketing Skills Suite",
+                SkillCategory::Productivity,
+                "Product positioning, copywriting, and growth workflows",
+                "marketing",
+                "/marketing",
+            ),
+            (
+                "CreminiAI/skillpack",
+                "CreminiAI",
+                "CreminiAI SkillPack",
+                SkillCategory::DevOpsAndWorkflows,
+                "Composable agent skill bundles",
+                "skill-bundle",
+                "/skillpack",
+            ),
+            (
+                "DietrichGebert/ponytail",
+                "DietrichGebert",
+                "Ponytail Agent Toolkit",
+                SkillCategory::Productivity,
+                "Lightweight developer automation skills",
+                "automation",
+                "/ponytail",
+            ),
+            (
+                "EliasOulkadi/shokunin",
+                "EliasOulkadi",
+                "Shokunin Craftsmanship",
+                SkillCategory::CodeReview,
+                "Clean code craftsmanship and refactoring discipline",
+                "refactoring",
+                "/shokunin",
+            ),
+            (
+                "emilkowalski/skills",
+                "emilkowalski",
+                "UI Motion & Design Skills",
+                SkillCategory::WebAndDesign,
+                "Polished UI interactions, transitions, and component craft",
+                "ui-motion",
+                "/emil-ui",
+            ),
+            (
+                "foryourhealth111-pixel/Vibe-Skills",
+                "foryourhealth111-pixel",
+                "Vibe Skills Pack",
+                SkillCategory::WebAndDesign,
+                "Rapid prototyping and creative coding skills",
+                "prototyping",
+                "/vibe",
+            ),
+            (
+                "gabelul/slopbuster",
+                "gabelul",
+                "Slopbuster Quality Gate",
+                SkillCategory::CodeReview,
+                "Eliminates boilerplate bloat and enforces concise code",
+                "code-quality",
+                "/slopbuster",
+            ),
+            (
+                "gabelul/stitch-kit",
+                "gabelul",
+                "Stitch Kit UI Builder",
+                SkillCategory::WebAndDesign,
+                "UI composition and design-to-code toolkit",
+                "ui-design",
+                "/stitch",
+            ),
+            (
+                "google/skills",
+                "google",
+                "Google Agent Skills",
+                SkillCategory::Architecture,
+                "Foundational agent capabilities and best-practice skills",
+                "agent-core",
+                "/google-skills",
+            ),
+            (
+                "guanyang/open-agent-hub",
+                "guanyang",
+                "Open Agent Hub",
+                SkillCategory::DevOpsAndWorkflows,
+                "Multi-agent skill registry and workflow hub",
+                "agent-hub",
+                "/agent-hub",
+            ),
+            (
+                "hesreallyhim/awesome-claude-code",
+                "hesreallyhim",
+                "Awesome Claude Code",
+                SkillCategory::Productivity,
+                "Curated slash commands, hooks, and coding workflows",
+                "workflows",
+                "/awesome-cc",
+            ),
+            (
+                "jame581/GodotPrompter",
+                "jame581",
+                "Godot Prompter",
+                SkillCategory::WebAndDesign,
+                "Godot game engine scene and GDScript assistant",
+                "gamedev",
+                "/godot",
+            ),
+            (
+                "jomeswang/agnes-ai-skill",
+                "jomeswang",
+                "Agnes AI Skill",
+                SkillCategory::DataAnalysis,
+                "Analytical reasoning and structured research skills",
+                "research",
+                "/agnes",
+            ),
+            (
+                "JPeetz/agent-skills",
+                "JPeetz",
+                "JPeetz Agent Skills",
+                SkillCategory::Productivity,
+                "Developer productivity and task automation skills",
+                "automation",
+                "/jpeetz",
+            ),
+            (
+                "K-Dense-AI/scientific-agent-skills",
+                "K-Dense-AI",
+                "Scientific Agent Skills",
+                SkillCategory::DataAnalysis,
+                "Scientific computing, bioinformatics, and literature analysis",
+                "scientific-computing",
+                "/science",
+            ),
+            (
+                "kangarooking/cangjie-skill",
+                "kangarooking",
+                "Cangjie Language Skill",
+                SkillCategory::LowLevelEngineering,
+                "Cangjie systems and application language support",
+                "cangjie",
+                "/cangjie",
+            ),
+            (
+                "lee-to/ai-factory",
+                "lee-to",
+                "AI Factory Pipeline",
+                SkillCategory::DevOpsAndWorkflows,
+                "Automated software delivery and agent factory pipelines",
+                "ci-cd",
+                "/ai-factory",
+            ),
+            (
+                "Leon-Drq/openagentskill",
+                "Leon-Drq",
+                "OpenAgentSkill",
+                SkillCategory::Productivity,
+                "Open cross-runtime agent skill definitions",
+                "skill-spec",
+                "/openagentskill",
+            ),
+            (
+                "Leonxlnx/taste-skill",
+                "Leonxlnx",
+                "Taste UI & Frontend Skill",
+                SkillCategory::WebAndDesign,
+                "High-craft visual design and frontend aesthetics",
+                "ui-design",
+                "/taste",
+            ),
+            (
+                "Light0305/Light-Science",
+                "Light0305",
+                "Light Science Suite",
+                SkillCategory::DataAnalysis,
+                "Quantitative modeling and scientific data analysis",
+                "science",
+                "/light-science",
+            ),
+            (
+                "majiayu000/spellbook",
+                "majiayu000",
+                "Agent Spellbook",
+                SkillCategory::Productivity,
+                "Composable prompt and workflow spellbook",
+                "prompting",
+                "/spellbook",
+            ),
+            (
+                "mattpocock/skills",
+                "mattpocock",
+                "TypeScript & Architecture Skills",
+                SkillCategory::Architecture,
+                "Type-safe TypeScript design, testing, and planning skills",
+                "typescript",
+                "/matt-skills",
+            ),
+            (
+                "moonlight-lupin/agent-skills",
+                "moonlight-lupin",
+                "Moonlight Agent Skills",
+                SkillCategory::Productivity,
+                "General-purpose coding and review skill pack",
+                "coding",
+                "/moonlight",
+            ),
+            (
+                "morluto/rea",
+                "morluto",
+                "REA Engineering Assistant",
+                SkillCategory::Architecture,
+                "Requirements engineering and architecture analysis",
+                "architecture",
+                "/rea",
+            ),
+            (
+                "nexscope-ai/eCommerce-Skills",
+                "nexscope-ai",
+                "eCommerce Skills",
+                SkillCategory::WebAndDesign,
+                "Storefront, catalog, and checkout workflow skills",
+                "ecommerce",
+                "/ecommerce",
+            ),
+            (
+                "nextlevelbuilder/ui-ux-pro-max-skill",
+                "nextlevelbuilder",
+                "UI/UX Pro Max Skill",
+                SkillCategory::WebAndDesign,
+                "Design systems, accessibility, and responsive layout skills",
+                "ui-ux",
+                "/ui-ux",
+            ),
+            (
+                "nexu-io/open-design",
+                "nexu-io",
+                "Open Design System",
+                SkillCategory::WebAndDesign,
+                "Design tokens, component specs, and visual QA",
+                "design-system",
+                "/open-design",
+            ),
+            (
+                "nisabmohd/aria-docs",
+                "nisabmohd",
+                "Aria Docs Generator",
+                SkillCategory::Productivity,
+                "Structured technical documentation and MDX authoring",
+                "documentation",
+                "/aria-docs",
+            ),
+            (
+                "nledford/engineering-review-board",
+                "nledford",
+                "Engineering Review Board",
+                SkillCategory::CodeReview,
+                "Multi-perspective architecture and PR review board",
+                "code-review",
+                "/review-board",
+            ),
+            (
+                "nolangz/pixel2svg-html",
+                "nolangz",
+                "Pixel to SVG/HTML Converter",
+                SkillCategory::WebAndDesign,
+                "Raster-to-vector SVG and semantic HTML conversion",
+                "svg-html",
+                "/pixel2svg",
+            ),
+            (
+                "NVIDIA/SkillSpector",
+                "NVIDIA",
+                "NVIDIA SkillSpector",
+                SkillCategory::LowLevelEngineering,
+                "GPU compute profiling and CUDA kernel inspection skills",
+                "gpu-profiling",
+                "/skillspector",
+            ),
+            (
+                "opensite-ai/opensite-skills",
+                "opensite-ai",
+                "OpenSite Web Skills",
+                SkillCategory::WebAndDesign,
+                "Static site generation and web publishing skills",
+                "web-publishing",
+                "/opensite",
+            ),
+            (
+                "paperclipai/paperclip",
+                "paperclipai",
+                "Paperclip Agent Orchestrator",
+                SkillCategory::DevOpsAndWorkflows,
+                "Task delegation and agent coordination workflows",
+                "orchestration",
+                "/paperclip",
+            ),
+            (
+                "pbakaus/impeccable",
+                "pbakaus",
+                "Impeccable Craft & UX",
+                SkillCategory::WebAndDesign,
+                "Frontend polish, typography, and interaction quality",
+                "ui-craft",
+                "/impeccable",
+            ),
+            (
+                "quysto/QUYQUY-AntigravityAwesomeSkills-GodVersion-bumbum",
+                "quysto",
+                "Antigravity Awesome Skills",
+                SkillCategory::Productivity,
+                "Comprehensive community skill collection",
+                "skill-pack",
+                "/quyquy",
+            ),
+            (
+                "rebelytics/one-skill-to-rule-them-all",
+                "rebelytics",
+                "One Skill Meta-Router",
+                SkillCategory::Architecture,
+                "Unified skill routing and context-aware dispatch",
+                "routing",
+                "/one-skill",
+            ),
+            (
+                "rorkai/app-store-connect-cli-skills",
+                "rorkai",
+                "App Store Connect CLI Skills",
+                SkillCategory::DevOpsAndWorkflows,
+                "Mobile release automation and store metadata management",
+                "mobile-release",
+                "/asc-cli",
+            ),
+            (
+                "seb1n/awesome-ai-agent-skills",
+                "seb1n",
+                "Awesome AI Agent Skills",
+                SkillCategory::Productivity,
+                "Curated directory of AI agent skills and tools",
+                "skill-catalog",
+                "/awesome-ai",
+            ),
+            (
+                "Shubhamsaboo/awesome-llm-apps",
+                "Shubhamsaboo",
+                "Awesome LLM Apps",
+                SkillCategory::DataAnalysis,
+                "LLM application patterns, RAG, and agentic workflows",
+                "llm-apps",
+                "/llm-apps",
+            ),
+            (
+                "sickn33/agentic-awesome-skills",
+                "sickn33",
+                "Agentic Awesome Skills",
+                SkillCategory::DevOpsAndWorkflows,
+                "Autonomous agent workflows and engineering skills",
+                "agentic-workflows",
+                "/agentic",
+            ),
+            (
+                "SkillsCat/skillscat",
+                "SkillsCat",
+                "SkillsCat Registry",
+                SkillCategory::Productivity,
+                "Searchable skill taxonomy and package index",
+                "skill-catalog",
+                "/skillscat",
+            ),
+            (
+                "taracodlabs/aiden",
+                "taracodlabs",
+                "Aiden Engineering Agent",
+                SkillCategory::CodeReview,
+                "Automated debugging, test generation, and code review",
+                "code-review",
+                "/aiden",
+            ),
+            (
+                "taxueseek/plugin-fast-adapt",
+                "taxueseek",
+                "Plugin Fast Adapt",
+                SkillCategory::DevOpsAndWorkflows,
+                "Rapid plugin adaptation and schema migration",
+                "plugin-adapt",
+                "/fast-adapt",
+            ),
+            (
+                "team-telnyx/ai",
+                "team-telnyx",
+                "Telnyx AI Telephony Skills",
+                SkillCategory::DevOpsAndWorkflows,
+                "Voice, messaging, and real-time communications AI skills",
+                "telephony-ai",
+                "/telnyx",
+            ),
+            (
+                "tt-a1i/archify",
+                "tt-a1i",
+                "Archify System Architect",
+                SkillCategory::Architecture,
+                "System architecture blueprints and dependency mapping",
+                "architecture",
+                "/archify",
+            ),
+            (
+                "vercel-labs/agent-skills",
+                "vercel-labs",
+                "Vercel Agent Skills",
+                SkillCategory::WebAndDesign,
+                "Next.js, React, and edge deployment best practices",
+                "web-framework",
+                "/vercel",
+            ),
+            (
+                "VidyFoo/antigravity-skill-engine",
+                "VidyFoo",
+                "VidyFoo Antigravity Skill Engine",
+                SkillCategory::DevOpsAndWorkflows,
+                "Deterministic skill execution and chaining",
+                "skill-engine",
+                "/vidyfoo",
+            ),
+            (
+                "VoltAgent/awesome-agent-skills",
+                "VoltAgent",
+                "VoltAgent Awesome Skills",
+                SkillCategory::Productivity,
+                "Curated multi-framework agent skills",
+                "skill-catalog",
+                "/voltagent",
+            ),
+            (
+                "VoltAgent/awesome-openclaw-skills",
+                "VoltAgent",
+                "Awesome OpenClaw Skills",
+                SkillCategory::DevOpsAndWorkflows,
+                "OpenClaw automation and tool-use skills",
+                "openclaw",
+                "/openclaw-skills",
+            ),
+            (
+                "wondelai/skills",
+                "wondelai",
+                "Wondelai Skill Suite",
+                SkillCategory::Productivity,
+                "Focused task execution and synthesis skills",
+                "synthesis",
+                "/wondelai",
+            ),
+            (
+                "zaoshangduziteng/web-reconstruction",
+                "zaoshangduziteng",
+                "Web Reconstruction Skill",
+                SkillCategory::WebAndDesign,
+                "DOM analysis and frontend layout reconstruction",
+                "web-reconstruction",
+                "/web-recon",
+            ),
+            (
+                "zjunlp/SkillNet",
+                "zjunlp",
+                "ZJU NLP SkillNet",
+                SkillCategory::DataAnalysis,
+                "Structured skill graph and compositional reasoning",
+                "skill-graph",
+                "/skillnet",
+            ),
         ];
 
-        for s in defaults {
-            let _ = self.add_skill(s);
+        for &(id, author, name, category, description, cap, trig) in STANDARD_SKILLS {
+            if let Ok(skill) = Skill::new(id, author, name, category, description) {
+                let _ = self.add_skill(skill.with_capability(cap).with_trigger(trig));
+            }
         }
     }
 
@@ -414,11 +974,37 @@ mod tests {
         let registry = Skills::with_defaults("DefaultRegistry");
 
         // Assert
-        assert!(registry.skill_count() >= 9);
+        assert!(registry.skill_count() >= 72);
         assert!(registry
             .get_skill("mohitmishra786/low-level-dev-skills")
             .is_some());
         assert!(registry.get_skill("alibaba/open-code-review").is_some());
+        assert!(registry.get_skill("NVIDIA/SkillSpector").is_some());
+        assert!(registry.get_skill("zjunlp/SkillNet").is_some());
+    }
+
+    #[test]
+    fn test_with_defaults_covers_all_categories_aaa() {
+        // Arrange
+        let registry = Skills::with_defaults("DefaultRegistry");
+        let categories = [
+            SkillCategory::CodeReview,
+            SkillCategory::DataAnalysis,
+            SkillCategory::Architecture,
+            SkillCategory::LowLevelEngineering,
+            SkillCategory::WebAndDesign,
+            SkillCategory::DevOpsAndWorkflows,
+            SkillCategory::Productivity,
+        ];
+
+        // Act & Assert
+        for cat in categories {
+            assert!(
+                !registry.get_by_category(cat).is_empty(),
+                "expected at least one skill in category {}",
+                cat.as_str()
+            );
+        }
     }
 
     #[test]
